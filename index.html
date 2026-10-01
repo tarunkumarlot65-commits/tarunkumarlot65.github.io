@@ -1022,10 +1022,10 @@ async function detectFaceWithLandmarks(input) {
   if (typeof faceapi === 'undefined' || !_faceModelsReady) return null;
   try {
     if (faceapi.nets.ssdMobilenetv1?.isLoaded) {
-      return await faceapi.detectSingleFace(input, new faceapi.SsdMobilenetv1Options({minConfidence:0.45})).withFaceLandmarks();
+      return await faceapi.detectSingleFace(input, new faceapi.SsdMobilenetv1Options({minConfidence:0.3})).withFaceLandmarks();
     }
     if (faceapi.nets.tinyFaceDetector?.isLoaded) {
-      return await faceapi.detectSingleFace(input, new faceapi.TinyFaceDetectorOptions({inputSize:416,scoreThreshold:0.45})).withFaceLandmarks();
+      return await faceapi.detectSingleFace(input, new faceapi.TinyFaceDetectorOptions({inputSize:416,scoreThreshold:0.3})).withFaceLandmarks();
     }
   } catch(e) {}
   return null;
