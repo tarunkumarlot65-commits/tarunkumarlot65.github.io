@@ -227,7 +227,7 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Devanagari',sans-serif}
         <div class="spinner"></div>
         <span id="faceAiMessage">Checking face…</span>
       </div>
-      <button onclick="startLivenessCheck()" id="livenessBtn" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl mb-2">▶ Start liveness (blink twice)</button>
+      <button onclick="startLivenessCheck()" id="livenessBtn" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl mb-2">▶ Start liveness (turn head)</button>
       <button onclick="captureSelfie()" id="captureBtn" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl mb-3 disabled:opacity-50" disabled>📷 Capture selfie</button>
       <button onclick="completeFaceVerification()" id="enter_btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition disabled:opacity-50" disabled>Enter GlobeTalk →</button>
     </div>
@@ -393,7 +393,7 @@ const FACE_MAX_AREA_RATIO = 0.65;
 const EAR_BLINK_THRESH = 0.25;
 const EAR_OPEN_THRESH = 0.27;
 const LIVENESS_TIMEOUT_MS = 30000;
-const BLINKS_NEEDED = 2;
+const BLINKS_NEEDED = 1;
 
 const translations = {
   en: {
@@ -1032,14 +1032,12 @@ async function detectFaceWithLandmarks(input) {
 }
 async function startLivenessCheck() {
   if (_livenessRunning) return;
+  if (_livenessPassed) { toast('Liveness already done — press Capture selfie', 'info'); return; }
   const video = document.getElementById('selfieVideoEl');
   if (!video || !video.srcObject) { toast('Camera not ready', 'warn'); return; }
-  const status = document.getElementById('faceAiStatus');
-  const msg = document.getElementById('faceAiMessage');
-  const overlay = document.getElementById('livenessOverlay');
-  const challenge = document.getElementById('livenessChallenge');
-  const liveBtn = document.getElementById('livenessBtn');
-  const capBtn = document.getElementById('captureBtn');
+  const status = document.getElementById('faceAiStatus'), msg = document.getElementById('faceAiMessage');
+  const overlay = document.getElementById('livenessOverlay'), challenge = document.getElementById('livenessChallenge');
+  const liveBtn = document.getElementById('livenessBtn'), capBtn = document.getElementById('captureBtn');
   await loadFaceModels();
   if (!_faceModelsReady || typeof faceapi === 'undefined') {
     toast('AI offline — hold still 3 sec', 'warn');
@@ -1048,19 +1046,18 @@ async function startLivenessCheck() {
     if (challenge) challenge.innerHTML = '✓ Time check done — now capture selfie';
     return;
   }
-  _livenessRunning = true;
-  _livenessPassed = false;
+  _livenessRunning = true; _livenessPassed = false;
   if (liveBtn) liveBtn.disabled = true;
   if (capBtn) capBtn.disabled = true;
   if (status) { status.classList.remove('hidden','success'); status.classList.add('info'); }
-  if (msg) msg.textContent = 'Liveness: blink twice…';
-  if (overlay) { overlay.classList.remove('hidden'); overlay.textContent = 'Blink twice — watching…'; }
-  if (challenge) challenge.innerHTML = '👀 Blink <strong>twice</strong> naturally';
-  let blinkCount = 0, eyeClosed = false;
+  if (msg) msg.textContent = 'Turn your head to both sides';
+  if (overlay) { overlay.classList.remove('hidden'); overlay.textContent = 'Turn head slowly to both sides'; }
+  if (challenge) challenge.innerHTML = '↔️ Turn your head <strong>slowly to one side</strong>, then the <strong>other side</strong>';
+  let sawA = false, sawB = false;
   const start = Date.now();
   const tick = async () => {
     if (!_livenessRunning) return;
-    if (Date.now() - start > LIVENESS_TIMEOUT_MS) {
+    if (Date.now() - start > 20000) {
       _livenessRunning = false;
       if (liveBtn) liveBtn.disabled = false;
       if (msg) msg.textContent = 'Timeout — try again';
@@ -1071,23 +1068,17 @@ async function startLivenessCheck() {
     try {
       const det = await detectFaceWithLandmarks(video);
       if (det && det.landmarks) {
-        const left = det.landmarks.getLeftEye();
-        const right = det.landmarks.getRightEye();
-        const ear = (eyeAspectRatio(left)+eyeAspectRatio(right))/2;
-        if (ear < EAR_BLINK_THRESH) eyeClosed = true;
-        else if (ear > EAR_OPEN_THRESH && eyeClosed) {
-          eyeClosed = false;
-          blinkCount++;
-          if (overlay) overlay.textContent = `Blink ${blinkCount}/${BLINKS_NEEDED}…`;
-          if (msg) msg.textContent = `Blink detected: ${blinkCount}/${BLINKS_NEEDED}`;
-        }
-        if (blinkCount >= BLINKS_NEEDED) {
-          _livenessRunning = false;
-          _livenessPassed = true;
+        const pts = det.landmarks.positions;
+        const r = (pts[30].x - pts[0].x) / (pts[16].x - pts[0].x);   // 0.5 = facing camera
+        if (r < 0.42) sawA = true;
+        if (r > 0.58) sawB = true;
+        if (overlay) overlay.textContent = (sawA ? '✓ ' : '• ') + 'one side   ' + (sawB ? '✓ ' : '• ') + 'other side';
+        if (sawA && sawB) {
+          _livenessRunning = false; _livenessPassed = true;
           if (overlay) { overlay.textContent = '✓ Liveness passed'; setTimeout(()=>overlay.classList.add('hidden'),1500); }
           if (status) { status.classList.remove('info'); status.classList.add('success'); }
           if (msg) msg.textContent = '✓ Live person — now capture selfie';
-          if (challenge) challenge.innerHTML = '✓ Liveness OK — press <strong>Capture selfie</strong>';
+          if (challenge) challenge.innerHTML = '✓ Liveness OK — look straight and press <strong>Capture selfie</strong>';
           if (capBtn) capBtn.disabled = false;
           if (liveBtn) { liveBtn.disabled = false; liveBtn.textContent = '✓ Liveness done'; }
           toast('Liveness passed', 'success');
@@ -1095,7 +1086,7 @@ async function startLivenessCheck() {
         }
       } else if (overlay) overlay.textContent = 'Face not found — center your face';
     } catch(e) {}
-    _livenessTimer = setTimeout(tick, 180);
+    _livenessTimer = setTimeout(tick, 120);
   };
   tick();
 }
@@ -1110,7 +1101,7 @@ function startFaceVerification() {
   const cap = document.getElementById('captureBtn');
   if (cap) { cap.disabled = true; cap.textContent = '📷 Capture selfie'; }
   const liveBtn = document.getElementById('livenessBtn');
-  if (liveBtn) { liveBtn.disabled = false; liveBtn.textContent = '▶ Start liveness (blink twice)'; }
+  if (liveBtn) { liveBtn.disabled = false; liveBtn.textContent = '▶ Start liveness (turn head)'; }
   const status = document.getElementById('faceAiStatus');
   const msg = document.getElementById('faceAiMessage');
   if (status) { status.classList.remove('hidden','success'); status.classList.add('info'); if (msg) msg.textContent = 'Loading face AI…'; }
