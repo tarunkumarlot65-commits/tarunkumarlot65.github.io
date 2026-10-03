@@ -11,13 +11,24 @@ h1{font-size:1.7rem;margin:.2em 0}h2{font-size:1.25rem;margin-top:2em;border-bot
 .card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px 18px;margin:16px 0}
 nav a{display:inline-block;margin:2px 10px 2px 0;color:var(--ac);text-decoration:none;font-weight:600}
 li{margin:.3em 0}.mut{color:var(--mut);font-size:.9rem}a{color:var(--ac)}
+select{padding:6px 10px;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--fg);font-size:.95rem}
+.goog-te-banner-frame,.skiptranslate iframe{display:none!important}body{top:0!important}
 </style></head><body><main>
 <h1>🌍 GlobeTalk</h1>
-<p class="mut">Terms of Use · Privacy Policy · Community Rules · Grievance Officer<br>Operated by <b>Thar Digital Ventures</b>, Bhilwara, Rajasthan, India · Last updated: 1 October 2026</p>
-<nav><a href="#terms">Terms</a><a href="#rules">Community rules</a><a href="#privacy">Privacy</a><a href="#grievance">Grievance</a></nav>
+<p class="mut" data-hi="उपयोग की शर्तें · गोपनीयता नीति · समुदाय के नियम · शिकायत अधिकारी<br>संचालक: <b>Thar Digital Ventures</b>, भीलवाड़ा, राजस्थान, भारत · अंतिम अपडेट: 1 अक्टूबर 2026">Terms of Use · Privacy Policy · Community Rules · Grievance Officer<br>Operated by <b>Thar Digital Ventures</b>, Bhilwara, Rajasthan, India · Last updated: 1 October 2026</p>
+<nav><a href="#terms" data-hi="शर्तें">Terms</a><a href="#rules" data-hi="समुदाय के नियम">Community rules</a><a href="#privacy" data-hi="गोपनीयता">Privacy</a><a href="#grievance" data-hi="शिकायत">Grievance</a></nav>
 
-<div class="card"><b>हिंदी सार:</b> GlobeTalk सिर्फ़ <b>18+</b> के लिए है। नग्नता, यौन सामग्री, गाली-गलौज, उत्पीड़न और नाबालिग मना हैं। नियम तोड़ने पर चेतावनी, 3 चेतावनी पर <b>हमेशा के लिए ban</b>; साफ़ तौर पर explicit video दिखाने पर तुरंत हटाना और 2 चेतावनी। आपका video/आवाज़ हम रिकॉर्ड या save नहीं करते। चैट message 30 दिन बाद अपने-आप मिट जाते हैं। Coins सिर्फ़ ऐप के अंदर हैं, उनकी कोई नक़द कीमत नहीं। शिकायत: <a href="#grievance">नीचे Grievance Officer</a>।</div>
+<p style="margin:10px 0 0"><label for="lang" data-hi="🌐 भाषा: ">🌐 Language: </label>
+<select id="lang">
+<option value="en">English</option><option value="hi">हिंदी</option><option value="es">Español</option><option value="fr">Français</option>
+<option value="de">Deutsch</option><option value="ja">日本語</option><option value="zh">中文</option><option value="ar">العربية</option>
+<option value="ru">Русский</option><option value="pt">Português</option><option value="id">Bahasa Indonesia</option><option value="vi">Tiếng Việt</option>
+<option value="ko">한국어</option><option value="th">ไทย</option><option value="bn">বাংলা</option><option value="ta">தமிழ்</option>
+<option value="te">తెలుగు</option><option value="mr">मराठी</option></select></p>
+<p class="mut" data-hi="यह हिंदी संस्करण है। किसी अंतर की स्थिति में अंग्रेज़ी संस्करण मान्य होगा।">Other languages are automatic translations for your convenience. If there is any difference, the English version applies.</p>
+<div class="card" id="hi-summary"><b>हिंदी सार:</b> GlobeTalk सिर्फ़ <b>18+</b> के लिए है। नग्नता, यौन सामग्री, गाली-गलौज, उत्पीड़न और नाबालिग मना हैं। नियम तोड़ने पर चेतावनी, 3 चेतावनी पर <b>हमेशा के लिए ban</b>; साफ़ तौर पर explicit video दिखाने पर तुरंत हटाना और 2 चेतावनी। आपका video/आवाज़ हम रिकॉर्ड या save नहीं करते। चैट message 30 दिन बाद अपने-आप मिट जाते हैं। Coins सिर्फ़ ऐप के अंदर हैं, उनकी कोई नक़द कीमत नहीं। शिकायत: <a href="#grievance">नीचे Grievance Officer</a>।</div>
 
+<div id="doc-en">
 <h2 id="terms">1. Terms of Use</h2>
 <ul>
 <li><b>18+ only.</b> By using GlobeTalk you confirm that you are at least 18 years old. If you are under 18, do not use the service. We may remove any account we suspect belongs to a minor.</li>
@@ -53,7 +64,7 @@ li{margin:.3em 0}.mut{color:var(--mut);font-size:.9rem}a{color:var(--ac)}
 <li><b>Technical logs</b> — our hosting providers may log basic data such as IP address for security.</li>
 </ul>
 <p><b>Video and voice.</b> Video and audio go directly between the two users (peer-to-peer, encrypted in transit) and may pass through relay servers when a direct link is not possible. <b>We do not record or store video or audio.</b> Automatic nudity detection runs on your own device on the incoming video; no frames are uploaded.</p>
-<p><b>Services we use.</b> Hosting and database (Vercel, Render, MongoDB Atlas), email delivery (Resend), text translation (MyMemory), and your browser's built-in speech recognition and voice (in Chrome these may use Google's services). Text you want translated is sent to the translation service.</p>
+<p><b>Services we use.</b> Hosting and database (Vercel, Render, MongoDB Atlas), email delivery (Resend), text translation (MyMemory), and your browser's built-in speech recognition and voice (in Chrome these may use Google's services). Text you want translated is sent to the translation service. If you view this page in a language other than English, the page text is sent to Google Translate to translate it.</p>
 <p><b>Sharing.</b> We do not sell your data. We share it only with the service providers above, and with authorities when the law requires or to report serious abuse.</p>
 <p><b>Your choices.</b> You can ask us to correct or delete your data or close your account by writing to the Grievance Officer below. Deleting your account removes your email, name and wallet; records needed for safety or legal reasons may be kept.</p>
 <p><b>Children.</b> GlobeTalk is not for anyone under 18. If we learn that a minor has an account, we delete it.</p>
@@ -68,4 +79,95 @@ li{margin:.3em 0}.mut{color:var(--mut);font-size:.9rem}a{color:var(--ac)}
 <b>Email:</b> <a href="mailto:tarunkumarlot65@gmail.com">tarunkumarlot65@gmail.com</a>
 </div>
 <p>Write to us for any complaint, privacy request, or to report content that is unlawful, abusive, or shows someone's private images without consent. Include the date, time and what happened. We acknowledge complaints within <b>24 hours</b> and aim to resolve them within <b>15 days</b>; intimate or sexually explicit content shared without consent is removed within <b>24 hours</b> of a complaint. If you see child sexual abuse material, report it to the police or the National Cyber Crime Reporting Portal (cybercrime.gov.in) and tell us.</p>
-</main></body></html>
+</div>
+
+<div id="doc-hi" hidden>
+<h2 id="terms">1. उपयोग की शर्तें</h2>
+<ul>
+<li><b>केवल 18+।</b> GlobeTalk इस्तेमाल करके आप पुष्टि करते हैं कि आपकी उम्र कम से कम 18 वर्ष है। 18 से कम उम्र हो तो सेवा का उपयोग न करें। जिस खाते के नाबालिग होने का शक होगा, उसे हम हटा सकते हैं।</li>
+<li><b>आपका खाता।</b> आप ईमेल के वन-टाइम कोड (OTP) और एक छोटी लाइव सेल्फ़ी जाँच से साइन इन करते हैं। खाता अपने तक रखें; उसमें जो कुछ होता है, उसके ज़िम्मेदार आप हैं।</li>
+<li><b>GlobeTalk क्या है।</b> यह वयस्कों को रैंडम वीडियो और टेक्स्ट चैट से जोड़ने वाला मंच है, वैकल्पिक अनुवाद के साथ। यह चैट मंच है, डेटिंग या एस्कॉर्ट सेवा नहीं। दूसरे उपयोगकर्ता क्या कहते या दिखाते हैं, उस पर हमारा नियंत्रण नहीं है; असहज लगे तो Report और Next बटन इस्तेमाल करें।</li>
+<li><b>गिफ़्ट और कॉइन।</b> कॉइन आभासी हैं, सिर्फ़ GlobeTalk के अंदर मान्य हैं, उनकी कोई नक़द कीमत नहीं है, और उन्हें बेचा, ट्रांसफ़र या वापस नहीं किया जा सकता। दुरुपयोग रोकने के लिए हम दाम या बैलेंस बदल सकते हैं। नए उपयोगकर्ताओं को वेलकम बोनस मिल सकता है।</li>
+<li><b>निलंबन।</b> नियम तोड़ने वाले खातों को हम चेतावनी दे सकते हैं, निलंबित या हमेशा के लिए ban कर सकते हैं, और गैरकानूनी गतिविधि की जानकारी अधिकारियों को दे सकते हैं।</li>
+<li><b>सेवा "जैसी है वैसी"।</b> हम सेवा चलाने की कोशिश करते हैं, पर बिना रुकावट सेवा, सटीक अनुवाद या पूरी तरह सही moderation की गारंटी नहीं देते। कानून जितनी अनुमति दे, उपयोगकर्ताओं के कहने-करने या सेवा के उपयोग से हुए किसी नुकसान के लिए Thar Digital Ventures उत्तरदायी नहीं है।</li>
+<li><b>कानून।</b> ये शर्तें भारत के कानूनों के अधीन हैं; भीलवाड़ा, राजस्थान की अदालतों को अधिकार क्षेत्र है।</li>
+</ul>
+
+<h2 id="rules">2. समुदाय के नियम</h2>
+<p>GlobeTalk पर ये मना है:</p>
+<ul>
+<li>वीडियो या चैट में नग्नता, यौन क्रियाएँ, निजी अंगों का प्रदर्शन या यौन प्रस्ताव।</li>
+<li>18 से कम उम्र का कोई भी व्यक्ति, या किसी भी तरह नाबालिगों से जुड़ी सामग्री।</li>
+<li>उत्पीड़न, धमकाना, धमकियाँ, नफ़रत भरी बातें, गाली-गलौज, या खुद को नुकसान पहुँचाने के लिए उकसाना।</li>
+<li>किसी दूसरे का वीडियो, आवाज़ या चैट उसकी सहमति के बिना रिकॉर्ड करना, screenshot लेना या साझा करना।</li>
+<li>Spam, विज्ञापन, ठगी, नकली पहचान, या लोगों की निजी जानकारी जुटाना।</li>
+<li>भारत या आपके देश के कानून के हिसाब से कुछ भी गैरकानूनी।</li>
+</ul>
+<p><b>क्या होता है:</b> गाली या अश्लील शब्दों वाले संदेश रोक दिए जाते हैं और एक चेतावनी गिनी जाती है; <b>3 चेतावनी = हमेशा के लिए ban</b>। साफ़ तौर पर explicit video देखने वाले के लिए अपने-आप छिप जाता है, उस अजनबी को छोड़कर आगे बढ़ा जाता है, उसकी रिपोर्ट होती है और वो <b>2 चेतावनी</b> गिनी जाती है। गंभीर या गैरकानूनी सामग्री पर तुरंत ban होता है और पुलिस को भी बताया जा सकता है। अपने-आप चलने वाले filter पूरी तरह सही नहीं हैं, इसलिए <b>Report</b> बटन भी इस्तेमाल करें।</p>
+
+<h2 id="privacy">3. गोपनीयता नीति</h2>
+<p><b>हम क्या जमा करते हैं और क्यों</b></p>
+<ul>
+<li><b>ईमेल और दिखने वाला नाम</b> — आपको साइन इन कराने और चैट वाले व्यक्ति को आपका नाम दिखाने के लिए।</li>
+<li><b>वन-टाइम कोड (OTP)</b> — अस्थायी, आपका ईमेल जाँचने के लिए।</li>
+<li><b>उम्र और सेल्फ़ी जाँच</b> — आपकी जन्मतिथि सिर्फ़ ये जाँचने के लिए इस्तेमाल होती है कि आप 18+ हैं। लाइव सेल्फ़ी जाँच आपके browser में चलती है; अभी जैसा बना है, आपकी सेल्फ़ी की तस्वीर हमारे पास अपलोड या सेव नहीं होती। हम सिर्फ़ आपकी जाँच की स्थिति और एक संख्या वाला मिलान-स्कोर रखते हैं।</li>
+<li><b>चैट संदेश</b> (टेक्स्ट और उसका अनुवाद, भाषा, भेजने वाले का नाम, समय) — चैट पहुँचाने, रिपोर्ट सँभालने और सेवा को सुरक्षित रखने के लिए। <b>संदेश 30 दिन बाद अपने-आप मिट जाते हैं।</b></li>
+<li><b>वॉलेट और गिफ़्ट</b> — आपके कॉइन का हिसाब और भेजे गए गिफ़्ट।</li>
+<li><b>सुरक्षा रिकॉर्ड</b> — रिपोर्ट, चेतावनियाँ और ban की स्थिति, जब तक सुरक्षा और कानूनी कारणों से ज़रूरी हो।</li>
+<li><b>तकनीकी लॉग</b> — हमारे hosting प्रदाता सुरक्षा के लिए IP address जैसी बुनियादी जानकारी दर्ज कर सकते हैं।</li>
+</ul>
+<p><b>वीडियो और आवाज़।</b> वीडियो और ऑडियो सीधे दो उपयोगकर्ताओं के बीच (peer-to-peer, ट्रांज़िट में एन्क्रिप्टेड) जाते हैं, और सीधा रास्ता न बनने पर relay servers से गुज़र सकते हैं। <b>हम वीडियो या ऑडियो रिकॉर्ड या सेव नहीं करते।</b> Nudity की अपने-आप जाँच आपके अपने device पर आने वाले वीडियो पर चलती है; कोई frame अपलोड नहीं होता।</p>
+<p><b>हम जिन सेवाओं का इस्तेमाल करते हैं।</b> Hosting और database (Vercel, Render, MongoDB Atlas), ईमेल भेजना (Resend), टेक्स्ट अनुवाद (MyMemory), और आपके browser की अपनी speech recognition और आवाज़ (Chrome में ये Google की सेवाओं का उपयोग कर सकती हैं)। जो टेक्स्ट आप अनुवाद कराते हैं, वो अनुवाद सेवा को भेजा जाता है।</p>
+<p><b>साझा करना।</b> हम आपका डेटा बेचते नहीं। उसे सिर्फ़ ऊपर लिखी सेवाओं के साथ, और कानून माँगे तो या गंभीर दुरुपयोग की रिपोर्ट के लिए अधिकारियों के साथ साझा करते हैं।</p>
+<p><b>आपके विकल्प।</b> आप नीचे दिए शिकायत अधिकारी को लिखकर अपना डेटा सुधारने या मिटाने, या खाता बंद करने को कह सकते हैं। खाता मिटाने पर आपका ईमेल, नाम और वॉलेट हट जाते हैं; सुरक्षा या कानूनी कारणों से ज़रूरी रिकॉर्ड रखे जा सकते हैं।</p>
+<p><b>बच्चे।</b> GlobeTalk 18 से कम उम्र के किसी के लिए नहीं है। अगर हमें पता चले कि किसी नाबालिग का खाता है, तो हम उसे हटा देते हैं।</p>
+<p><b>सुरक्षा।</b> हम उचित सुरक्षा उपाय अपनाते हैं, पर कोई सिस्टम पूरी तरह सुरक्षित नहीं होता। अगर किसी डेटा लीक का असर आप पर पड़ता है, तो कानून के हिसाब से हम आपको और अधिकारियों को बताएँगे।</p>
+<p><b>बदलाव।</b> हम इस पन्ने को अपडेट कर सकते हैं; ऊपर लिखी तारीख़ सबसे नया संस्करण बताती है।</p>
+
+<h2 id="grievance">4. शिकायत अधिकारी और रिपोर्ट</h2>
+<div class="card">
+<b>नाम:</b> Tarun Kumar Lot<br>
+<b>पद:</b> CEO &amp; Founder, Thar Digital Ventures<br>
+<b>पता:</b> भीलवाड़ा, राजस्थान, भारत<br>
+<b>ईमेल:</b> <a href="mailto:tarunkumarlot65@gmail.com">tarunkumarlot65@gmail.com</a>
+</div>
+<p>कोई भी शिकायत, निजता से जुड़ा अनुरोध, या गैरकानूनी, अपमानजनक सामग्री अथवा बिना सहमति के किसी की निजी तस्वीरों की रिपोर्ट के लिए हमें लिखें। तारीख़, समय और क्या हुआ, ये ज़रूर बताएँ। हम शिकायत की रसीद <b>24 घंटे</b> में देते हैं और <b>15 दिन</b> में समाधान का लक्ष्य रखते हैं; बिना सहमति साझा की गई अंतरंग या यौन सामग्री शिकायत के <b>24 घंटे</b> के अंदर हटा दी जाती है। अगर आपको बच्चों के यौन शोषण की कोई सामग्री दिखे, तो पुलिस या National Cyber Crime Reporting Portal (cybercrime.gov.in) को रिपोर्ट करें और हमें भी बताएँ।</p>
+</div>
+</main>
+<div id="google_translate_element" style="display:none"></div>
+<script>
+(function () {
+  var G = {zh: 'zh-CN'};
+  var q = new URLSearchParams(location.search).get('lang');
+  var lang = q || localStorage.getItem('globetalk_lang') || 'en';
+  var sel = document.getElementById('lang');
+  if (![].some.call(sel.options, function (o) { return o.value === lang; })) lang = 'en';
+  sel.value = lang;
+  function setCookie(code) {
+    var v = code === 'en' ? '' : '/en/' + (G[code] || code);
+    document.cookie = 'googtrans=' + v + '; path=/' + (code === 'en' ? '; expires=Thu, 01 Jan 1970 00:00:00 GMT' : '');
+  }
+  setCookie(lang === 'hi' ? 'en' : lang);
+  var enDoc = document.getElementById('doc-en'), hiDoc = document.getElementById('doc-hi');
+  if (lang === 'hi') {
+    enDoc.remove(); hiDoc.hidden = false; document.documentElement.lang = 'hi';
+    var sm = document.getElementById('hi-summary'); if (sm) sm.remove();
+    document.querySelectorAll('[data-hi]').forEach(function (e) { e.innerHTML = e.getAttribute('data-hi'); });
+  } else { hiDoc.remove(); }
+  if (lang === 'ar') document.documentElement.dir = 'rtl';
+  sel.addEventListener('change', function () {
+    try { localStorage.setItem('globetalk_lang', sel.value); } catch (e) {}
+    setCookie(sel.value === 'hi' ? 'en' : sel.value);
+    location.href = location.pathname + '?lang=' + sel.value;
+  });
+  if (lang !== 'en' && lang !== 'hi') {
+    window.googleTranslateElementInit = function () {
+      new google.translate.TranslateElement({pageLanguage: 'en', autoDisplay: false}, 'google_translate_element');
+    };
+    var t = document.createElement('script');
+    t.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    document.body.appendChild(t);
+  }
+})();
+</script>
+</body></html>
