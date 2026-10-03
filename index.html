@@ -227,7 +227,7 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Devanagari',sans-serif}
         <div class="spinner"></div>
         <span id="faceAiMessage">Checking face…</span>
       </div>
-      <button onclick="startLivenessCheck()" id="livenessBtn" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl mb-2">▶ Start liveness (turn head)</button>
+      <button onclick="startLivenessCheck()" id="livenessBtn" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl mb-2">▶ Start liveness (right → left)</button>
       <button onclick="captureSelfie()" id="captureBtn" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl mb-3 disabled:opacity-50" disabled>📷 Capture selfie</button>
       <button onclick="completeFaceVerification()" id="enter_btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition disabled:opacity-50" disabled>Enter GlobeTalk →</button>
     </div>
@@ -250,8 +250,9 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Devanagari',sans-serif}
     </div>
   </div>
 
-  <div class="flex-1 min-h-0 bg-gradient-to-br from-slate-900 to-slate-800 p-3 flex flex-col">
-    <div class="flex-1 min-h-0 grid grid-cols-2 gap-3 mb-3">
+  <div class="flex-1 min-h-0 flex flex-col md:flex-row">
+  <div class="flex-1 min-w-0 min-h-0 bg-gradient-to-br from-slate-900 to-slate-800 p-3 flex flex-col">
+    <div class="flex-1 min-h-0 grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1 gap-3 mb-3">
       <div class="video-tile">
         <video id="yourVideo" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover"></video>
         <div class="video-label" id="your_label">You</div>
@@ -270,10 +271,11 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Devanagari',sans-serif}
     </div>
   </div>
 
-  <div class="h-56 bg-white border-t border-slate-200 flex flex-col shrink-0">
+  <div class="h-52 md:h-auto md:w-96 bg-white border-t md:border-t-0 md:border-l border-slate-200 flex flex-col shrink-0">
     <div id="messages" class="flex-1 overflow-y-auto p-3 space-y-2 bg-slate-50"></div>
     <div class="p-3 border-t border-slate-200 space-y-2 bg-white">
       <div class="flex flex-wrap items-center gap-2 text-[11px]">
+        <span class="font-semibold text-slate-600">🎤 I speak:</span>
         <select id="myLang" class="px-2 py-1 rounded-lg border border-slate-200 bg-white font-medium">
           <option value="hi" selected>🇮🇳 Hindi</option>
           <option value="en">🇬🇧 English</option>
@@ -296,7 +298,7 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Devanagari',sans-serif}
           <option value="te">🇮🇳 Telugu</option>
           <option value="mr">🇮🇳 Marathi</option>
         </select>
-        <span class="text-slate-400">→</span>
+        <span class="font-semibold text-slate-600">🔊 I hear:</span>
         <select id="theirLang" class="px-2 py-1 rounded-lg border border-slate-200 bg-white font-medium">
           <option value="en" selected>English</option>
           <option value="hi">Hindi</option>
@@ -315,6 +317,7 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Devanagari',sans-serif}
           <option value="ko">Korean</option>
           <option value="pt">Portuguese</option>
         </select>
+        <span class="font-semibold text-slate-600">Voice:</span>
         <select id="voiceGender" class="px-2 py-1 rounded-lg border border-slate-200 bg-white font-semibold">
           <option value="female" selected>♀ Female</option>
           <option value="male">♂ Male</option>
@@ -325,6 +328,7 @@ body{font-family:'Plus Jakarta Sans','Noto Sans Devanagari',sans-serif}
         <button onclick="sendMessage()" class="w-10 h-10 rounded-lg bg-blue-600 hover:bg-blue-700 text-white"><i class="fa-solid fa-paper-plane"></i></button>
       </div>
     </div>
+  </div>
   </div>
 </div>
 
@@ -1050,10 +1054,10 @@ async function startLivenessCheck() {
   if (liveBtn) liveBtn.disabled = true;
   if (capBtn) capBtn.disabled = true;
   if (status) { status.classList.remove('hidden','success'); status.classList.add('info'); }
-  if (msg) msg.textContent = 'Turn your head to both sides';
-  if (overlay) { overlay.classList.remove('hidden'); overlay.textContent = 'Turn head slowly to both sides'; }
-  if (challenge) challenge.innerHTML = '↔️ Turn your head <strong>slowly to one side</strong>, then the <strong>other side</strong>';
-  let sawA = false, sawB = false;
+  if (msg) msg.textContent = 'Turn right, then left';
+  if (overlay) { overlay.classList.remove('hidden'); overlay.textContent = 'Turn your head to your RIGHT'; }
+  if (challenge) challenge.innerHTML = '➡️ Turn your head slowly to your <strong>RIGHT</strong>, then to your <strong>LEFT</strong>';
+  let sawA = false, sawB = false;   // sawA = turned to own RIGHT, sawB = then own LEFT
   const start = Date.now();
   const tick = async () => {
     if (!_livenessRunning) return;
@@ -1070,9 +1074,11 @@ async function startLivenessCheck() {
       if (det && det.landmarks) {
         const pts = det.landmarks.positions;
         const r = (pts[30].x - pts[0].x) / (pts[16].x - pts[0].x);   // 0.5 = facing camera
-        if (r < 0.42) sawA = true;
-        if (r > 0.58) sawB = true;
-        if (overlay) overlay.textContent = (sawA ? '✓ ' : '• ') + 'one side   ' + (sawB ? '✓ ' : '• ') + 'other side';
+        if (!sawA && r < 0.42) {
+          sawA = true;
+          if (challenge) challenge.innerHTML = '⬅️ Good! Now turn your head to your <strong>LEFT</strong>';
+        } else if (sawA && r > 0.58) sawB = true;
+        if (overlay) overlay.textContent = sawA ? '✓ Right done — now turn LEFT' : 'Turn your head to your RIGHT';
         if (sawA && sawB) {
           _livenessRunning = false; _livenessPassed = true;
           if (overlay) { overlay.textContent = '✓ Liveness passed'; setTimeout(()=>overlay.classList.add('hidden'),1500); }
@@ -1267,23 +1273,34 @@ function getVoiceGenderRV() {
   const el = document.getElementById('voiceGender');
   return (el && el.value === 'male') ? 'male' : 'female';
 }
+const TTS_TAGS = {hi:'hi-IN',en:'en-US',id:'id-ID',de:'de-DE',tl:'fil-PH',vi:'vi-VN',ms:'ms-MY',th:'th-TH',ja:'ja-JP',ru:'ru-RU',es:'es-ES',fr:'fr-FR',zh:'zh-CN',ar:'ar-SA',pt:'pt-BR',ko:'ko-KR',bn:'bn-IN',ta:'ta-IN',te:'te-IN',mr:'mr-IN'};
 function speakWithResponsiveVoice(text, langCode) {
   if (!text) return;
   const base = (langCode||'en').split('-')[0].toLowerCase();
   const gender = getVoiceGenderRV();
+  if (window.speechSynthesis) {
+    const tag = TTS_TAGS[base] || 'en-US';
+    const voices = window.speechSynthesis.getVoices() || [];
+    const pool = voices.filter(v => v.lang.toLowerCase().replace('_','-').startsWith(base));
+    const pick = pool.find(v => gender==='male' ? /male|hemant|ravi|david|mark/i.test(v.name) : /female|kalpana|heera|zira|google/i.test(v.name)) || pool[0];
+    if (pick || voices.length === 0) {
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(String(text));
+      u.lang = pick ? pick.lang : tag; if (pick) u.voice = pick;
+      u.rate = 0.95; u.pitch = gender==='male'?0.9:1.05; u.volume = 1;
+      window.speechSynthesis.speak(u);
+      return;
+    }
+  }
+  // fallback: ResponsiveVoice (needs its free domain registration to be reliable)
   const map = RV_VOICES[base] || RV_VOICES.en;
   const voiceName = map[gender] || map.female || 'US English Female';
   if (typeof responsiveVoice !== 'undefined' && responsiveVoice.voiceSupport()) {
     try { responsiveVoice.cancel(); } catch(e) {}
     responsiveVoice.speak(String(text), voiceName, { pitch: gender==='male'?0.9:1.05, rate:0.95, volume:1 });
-  } else if (window.speechSynthesis) {
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = base==='hi'?'hi-IN':base==='en'?'en-US':base;
-    u.rate = 0.92; u.pitch = gender==='male'?0.9:1.05;
-    window.speechSynthesis.speak(u);
-  }
+  } else toast('No voice for this language on this device', 'warn');
 }
+if (window.speechSynthesis) { window.speechSynthesis.getVoices(); window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices(); }
 async function translateTextFree(text, fromCode, toCode) {
   const from = (fromCode||'en').split('-')[0].toLowerCase();
   const to = (toCode||'en').split('-')[0].toLowerCase();
@@ -1328,11 +1345,10 @@ function toggleVoiceTranslate() {
     _rvListening = false;
     if (btn) { btn.classList.remove('bg-red-600','voice-active'); btn.classList.add('bg-emerald-600'); }
     const theirLang = document.getElementById('theirLang')?.value || 'en';
+    if (typeof partnerId === 'undefined' || !partnerId) { toast('No stranger connected — press Next', 'warn'); return; }
     addMessage(final.trim(), 'sent');
-    toast('Translating…', 'info');
-    const translated = await translateTextFree(final.trim(), myLang, theirLang);
-    if (translated && translated !== final.trim()) addMessage('🌐 ' + translated, 'sent');
-    speakWithResponsiveVoice(translated || final.trim(), theirLang);
+    sock.emit('message', { from: sock.id, to: partnerId, senderName: currentUser.name, text: final.trim(), language: myLang, targetLang: theirLang, roomId });
+    toast('Sent — stranger will hear it in their language', 'success');
   };
   _rvRecognition.onerror = (e) => {
     _rvListening = false;
@@ -1387,7 +1403,7 @@ function closePeer() {
 function makePeer() {
   pc = new RTCPeerConnection(ICE_CONFIG);
   if (localStream) localStream.getTracks().forEach(t => pc.addTrack(t, localStream));
-  pc.ontrack = e => { const v = document.getElementById('strangerVideo'); if (v) v.srcObject = e.streams[0]; };
+  pc.ontrack = e => { const v = document.getElementById('strangerVideo'); if (v) { v.style.filter = 'blur(28px)'; nsfwHits = 0; nsfwClean = 0; v.srcObject = e.streams[0]; } };
   pc.onicecandidate = e => { if (e.candidate && partnerId) sock.emit('ice-candidate', { to: partnerId, candidate: e.candidate }); };
   pc.onconnectionstatechange = () => { if (pc && pc.connectionState === 'failed') toast('Video connection failed — press Next', 'warn'); };
 }
@@ -1398,7 +1414,7 @@ function netInit() {
   if (sock || typeof io === 'undefined') return;
   sock = io(BACKEND_URL, { transports: ['websocket', 'polling'] });
   sock.on('connect', () => {
-    sock.emit('user-join', { userId: currentUser.email, username: currentUser.name, isVerified: true });
+    sock.emit('user-join', { userId: currentUser.email, username: currentUser.name, isVerified: true, token: currentUser.token });
     setTimeout(() => sock.emit('find-stranger'), 300);
   });
   sock.on('connect_error', () => toast('Server waking up — retrying…', 'warn'));
@@ -1430,12 +1446,19 @@ function netInit() {
 
   sock.on('message', async d => {
     addMessage(d.text, 'received');
-    const mine = (document.getElementById('myLang') || {}).value || 'hi';
+    const mine = (document.getElementById('theirLang') || {}).value || 'en';   // my "I hear" language
     const t = await translateTextFree(d.text, d.language || 'en', mine);
     if (t && t !== d.text) addMessage('🌐 ' + t, 'received');
     speakWithResponsiveVoice(t || d.text, mine);
   });
-  sock.on('gift:received', d => showGiftPop(d.emoji));
+  sock.on('gift:catalog', d => { giftCatalog = d.gifts || []; });
+  sock.on('wallet:update', d => { myCoins = d.coins; const el = document.getElementById('coinBal'); if (el) el.textContent = '🪙 ' + d.coins;
+    if (d.welcome) toast('🎉 Welcome bonus: ' + d.coins + ' coins added to your wallet', 'success'); });
+  sock.on('gift:received', d => { showGiftPop(d.emoji); addMessage('🎁 ' + (d.from || 'Stranger') + ' sent: ' + d.emoji + ' ' + d.name, 'received'); });
+  sock.on('gift:sent', d => { showGiftPop(d.emoji); addMessage('🎁 You sent: ' + d.emoji + ' ' + d.name, 'sent'); });
+  sock.on('gift:error', d => toast(d.message, 'error'));
+  sock.on('moderation-warning', d => { toast(d.message, 'warn'); addMessage('⚠️ ' + d.message, 'received'); });
+  sock.on('banned', d => { alert(d.message); try { localStorage.clear(); } catch (e) {} location.reload(); });
 }
 
 function showGiftPop(emoji) {
@@ -1459,6 +1482,51 @@ function reportStranger() {
   toast('Report sent. Skipping stranger.', 'success'); nextStranger();
 }
 
+/* ===== Video safety: nudity detection on the STRANGER's incoming video (runs in the viewer's browser, no frames uploaded) ===== */
+let nsfwModel = null, nsfwLoading = false, nsfwHits = 0, nsfwClean = 0, nsfwTimer = null;
+const NSFW_TEST = /[?&]nsfwtest=1/.test(location.search);   // test mode: "Sexy" class counts too (e.g. bare torso) so you can verify safely
+function loadScript(src) { return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
+async function loadNsfw() {
+  if (nsfwModel || nsfwLoading) return; nsfwLoading = true;
+  try {
+    await loadScript('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js');
+    await loadScript('https://cdn.jsdelivr.net/npm/nsfwjs@4.4.0/dist/browser/nsfwjs.min.js');
+    nsfwModel = await nsfwjs.load();
+    startNsfwWatch();
+  } catch (e) {
+    nsfwLoading = false; console.warn('NSFW model failed', e);
+    toast('Safety filter could not load — stranger video stays hidden. Refresh the page.', 'error');
+  }
+}
+function nsfwDebug(p) {
+  let d = document.getElementById('nsfwDbg');
+  if (!d) { d = document.createElement('div'); d.id = 'nsfwDbg'; d.style.cssText = 'position:fixed;top:60px;left:8px;background:#000c;color:#0f0;font:12px monospace;padding:6px;z-index:99;border-radius:6px'; document.body.appendChild(d); }
+  d.textContent = Object.keys(p).map(k => k + ' ' + p[k].toFixed(2)).join(' | ');
+}
+function startNsfwWatch() {
+  clearInterval(nsfwTimer);
+  nsfwTimer = setInterval(async () => {
+    const v = document.getElementById('strangerVideo');
+    if (!nsfwModel || !v || !v.srcObject || v.readyState < 2 || !partnerId) return;
+    try {
+      const preds = await nsfwModel.classify(v), p = {};
+      preds.forEach(x => p[x.className] = x.probability);
+      if (NSFW_TEST) nsfwDebug(p);
+      const bad = (p.Porn || 0) + (p.Hentai || 0) + (NSFW_TEST ? (p.Sexy || 0) : 0);
+      if (bad >= 0.7) { nsfwHits++; nsfwClean = 0; } else { nsfwHits = Math.max(0, nsfwHits - 1); if (bad < 0.5) nsfwClean++; }
+      if (nsfwHits >= 2) return nsfwTrigger();
+      if (nsfwClean >= 2) v.style.filter = '';                 // only unblur after the model has seen clean frames
+    } catch (e) {}
+  }, 800);
+}
+function nsfwTrigger() {
+  nsfwHits = 0; nsfwClean = 0;
+  const v = document.getElementById('strangerVideo'); if (v) v.style.filter = 'blur(40px)';
+  if (sock && partnerId) sock.emit('nsfw-detected', { partner: partnerId, roomId });
+  toast('⚠️ Explicit video detected — stranger removed and reported', 'error');
+  nextStranger();
+}
+
 /* ---- overrides of earlier functions (inline onclick handlers call these by name) ---- */
 function addMessage(text, type) {   // XSS-safe: textContent, never innerHTML
   const box = document.getElementById('messages');
@@ -1476,8 +1544,22 @@ async function sendMessage() {
   sock.emit('message', { from: sock.id, to: partnerId, senderName: currentUser.name, text, language: myLang, targetLang: theirLang, roomId });
 }
 
-const _openGiftsOrig = openGifts;
-openGifts = function () { _openGiftsOrig(); if (sock && roomId) sock.emit('gift:send', { emoji: '🎁', roomId, from: currentUser.name }); };
+let giftCatalog = [], myCoins = null;
+openGifts = function () {
+  if (!sock) return;
+  const old = document.getElementById('giftPanel'); if (old) { old.remove(); return; }
+  const p = document.createElement('div'); p.id = 'giftPanel';
+  p.style.cssText = 'position:fixed;left:50%;bottom:90px;transform:translateX(-50%);width:min(92vw,380px);background:#fff;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.35);padding:12px;z-index:60;max-height:60vh;overflow:auto';
+  const head = document.createElement('div'); head.style.cssText = 'display:flex;justify-content:space-between;font-weight:700;margin-bottom:8px;color:#0f172a';
+  head.textContent = '🎁 Send a gift'; const bal = document.createElement('span'); bal.id = 'coinBal'; bal.textContent = '🪙 ' + (myCoins === null ? '…' : myCoins); head.appendChild(bal); p.appendChild(head);
+  giftCatalog.forEach(g => {
+    const b = document.createElement('button'); b.textContent = g.emoji + ' ' + g.name + ' — 🪙 ' + g.price;
+    b.style.cssText = 'display:block;width:100%;text-align:left;padding:10px 12px;margin-bottom:6px;border:1px solid #e2e8f0;border-radius:12px;background:#f8fafc;color:#0f172a;font-size:14px';
+    b.onclick = () => { if (!partnerId) { toast('No stranger connected', 'warn'); return; } sock.emit('gift:send', { giftId: g.id, roomId, from: currentUser.name }); p.remove(); };
+    p.appendChild(b);
+  });
+  document.body.appendChild(p);
+};
 
 const _endCallOrig = endCall;
 endCall = function () { try { if (sock) { sock.emit('user-left'); sock.disconnect(); } } catch (e) {} _endCallOrig(); };
@@ -1492,9 +1574,10 @@ requestUserMedia = async function () {
     endBtn.parentElement.insertBefore(mk('nextBtn', '⏭', 'bg-blue-600 hover:bg-blue-700', nextStranger, 'Next stranger'), endBtn);
     endBtn.parentElement.insertBefore(mk('reportBtn', '🚩', 'bg-amber-600 hover:bg-amber-700', reportStranger, 'Report'), endBtn);
   }
-  setStatus('Connecting to server…'); netInit();
+  setStatus('Connecting to server…'); netInit(); loadNsfw();
 };
 </script>
 
+<script>openLandingLegal = function () { window.open('legal.html?lang=' + encodeURIComponent(currentLang || 'en'), '_blank', 'noopener'); };</script>
 </body>
 </html>
